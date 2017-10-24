@@ -1,0 +1,5 @@
+<h1>Hey there. This is the Wiki List</h1>
+<% @wikis.each do |wiki| %>
+<p><%= link_to wiki.title, wiki %>
+<% end %>
+<%= link_to "New Wiki", new_wiki_path, class: 'btn btn-success' %>
