@@ -4,9 +4,11 @@ class CollaboratorsController < ApplicationController
     @collaborators = Collaborator.all
 
   def new
-    @wiki = Wiki.find(789)
-@wiki.collaboration_user_ids = [123, 456]
-@wiki.save
+    @collaborator = @wiki.collaborators.new(user_id: params[:user_id])
+    @collaborator.save
+    #@wiki = Wiki.find()
+#@wiki.collaboration_user_ids = []
+#@wiki.save
  end
 
   def show
