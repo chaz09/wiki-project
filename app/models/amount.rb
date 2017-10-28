@@ -1,7 +1,5 @@
 class Amount
-
   def self.default
-
-    100
+    15_00
   end
 end

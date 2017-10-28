@@ -1,11 +1,13 @@
 class WikisController < ApplicationController
-  include Pundit
-  def index
-    @wikis = Wiki.all
-  end
+
+before_action :authenticate_user!
+    def index
+      @wikis = policy_scope(Wiki)
+    end
 
   def show
-    @wiki = find_id
+    @wiki = Wiki.find(params[:id])
+    authorize @wiki
   end
 
   def new
@@ -13,44 +15,41 @@ class WikisController < ApplicationController
   end
 
   def create
-    @wiki = current_user.wikis.new(wiki_params)
-
+    @wiki = Wiki.new(wiki_params)
+    @wiki.user = current_user
     if @wiki.save
-      flash[:notice] = "Wiki was saved successfully."
+      flash[:notice] = "Wiki saved."
       redirect_to @wiki
     else
-      flash.now[:alert] = "There was an error saving the wiki. Please try again."
+      flash.now[:alert] = "Error"
       render :new
     end
   end
 
   def edit
-    @wiki = find_id
+    @wiki = Wiki.find(params[:id])
   end
 
   def update
-    @wiki = find_id
+    @wiki = Wiki.find(params[:id])
     @wiki.assign_attributes(wiki_params)
-
-
     if @wiki.save
       flash[:notice] = "Wiki was updated successfully"
       redirect_to @wiki
     else
-      flash.now[:alerts]= "There was an error updated the Wiki. Please try again."
+      flash.now[:alerts]= "Errpr. Try again."
       render :edit
     end
   end
 
   def destroy
+    authorize @wiki
     @wiki = find_id
-
-
     if @wiki.destroy
-      flash[:notice] ="\"#{@wiki.title}\" was deleted"
+      flash[:notice] ="Deleted"
       redirect_to wikis_path
     else
-      flash.now[:alert] = "There was an error deleting the post."
+      flash.now[:alert] = "Error"
       render :show
     end
   end
@@ -62,4 +61,11 @@ class WikisController < ApplicationController
   def find_id
     Wiki.find(params[:id])
   end
+   def authorize_user
+     wiki = Wiki.find(params[:id])
+     unless current_user == wiki.user || current_user.admin?
+       flash[:alert] = "You must be an admin, premium user or collaborator to do that."
+       redirect_to wikis_path
+     end
+   end
 end

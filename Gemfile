@@ -2,9 +2,9 @@ source 'https://rubygems.org'
 
  # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
  gem 'rails', '4.2.8'
- gem 'devise'
- gem 'pundit'
- gem 'stripe'
+
+
+
 
  group :production do
    gem 'pg'
@@ -23,6 +23,10 @@ source 'https://rubygems.org'
  gem 'turbolinks'
  gem 'bootstrap'
  gem 'figaro', '1.0'
+ gem 'stripe'
+ gem 'devise'
+ gem 'pundit'
+ gem 'redcarpet'
 
  group :development, :test do
    gem 'byebug'

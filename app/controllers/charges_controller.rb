@@ -1,35 +1,40 @@
 class ChargesController < ApplicationController
-  def create
-     # Creates a Stripe Customer object, for associating
-     # with the charge
-     customer = Stripe::Customer.create(
-       email: current_user.email,
-       card: params[:stripeToken]
-     )
 
+ def new
+   @stripe_btn_data = {
+     key: "#{ Rails.configuration.stripe[:publishable_key] }",
+     description: "BigMoney Membership - #{current_user.name}",
+     amount: Amount.default
+   }
+ end
 
-     charge = Stripe::Charge.create(
-       customer: customer.id,
-       amount: Amount.default,
-       description: "BigMoney Membership - #{current_user.email}",
-       currency: 'usd'
-     )
+ def create
 
-     flash[:notice] = "Thanks for all the money, #{current_user.email}! Feel free to pay me again."
-     redirect_to user_path(current_user)
+   customer = Stripe::Customer.create(
+     email: current_user.email,
+     card: params[:stripeToken]
+   )
 
-     rescue Stripe::CardError => e
-       flash[:alert] = e.message
-       redirect_to new_charge_path
-   end
-   def new
-      @stripe_btn_data = {
-        key: "#{ Rails.configuration.stripe[:publishable_key] }",
-        description: "BigMoney Membership - #{current_user.name}",
-        amount: Amount.default
-      }
-    end
+   charge = Stripe::Charge.create(
+     customer: customer.id,
+     amount: Amount.default,
+     description: "BigMoney Membership - #{current_user.email}",
+     currency: 'usd'
+   )
 
-    def downgrading_accont
-      flash[:notice] = "Looks like you are going back to basics #{current_user.email}! Feel free to pay me again."
+   flash[:notice] = "Thanks for all the money, #{current_user.email}! Feel free to pay me again."
+   current_user.role = :premium
+   current_user.save!
+
+   rescue Stripe::CardError => e
+     flash[:alert] = e.message
+     redirect_to new_charge_path
+ end
+
+ def downgrade_account
+
+   current_user.role = :standard
+   current_user.save!
+    redirect_to root_path
   end
+end

@@ -3,13 +3,15 @@ Rails.application.routes.draw do
   get 'charges/create'
   get 'charges/new'
 
-
-resources :wikis
+devise_for :users
 resources :users
+resources :wikis
+
+resources :wikis do
+resources :collaborators, only: [:index, :new, :destroy, :update]
+end
 resources :charges, only: [:new, :create]
 
-devise_for :users
-devise_scope :user do
 
 get '/users/sign_out' => 'devise/sessions#destroy'
 get "login", :to => "devise/sessions#new"
@@ -20,5 +22,6 @@ get "login", :to => "devise/sessions#new"
 
 get 'about' => 'welcome#about'
 root "welcome#index"
-end
+ get 'users/downgrade/:customer' => 'charges#downgrade_account', as: :downgrade_account
+get 'collaborators/:id' => 'collaborators#new', as: "new_collaborators_for_wiki"
 end
