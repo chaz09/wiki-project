@@ -53,6 +53,7 @@ before_action :authenticate_user!
       render :show
     end
   end
+  
   private
 
   def wiki_params
