@@ -1,19 +1,23 @@
 class CollaboratorsController < ApplicationController
 
-  def index
-    @collaborators = Collaborator.all
+def index
+end
 
   def new
-    @collaborator = @wiki.collaborators.new(user_id: params[:user_id])
-    @collaborator.save
-    #@wiki = Wiki.find()
+    @collaborator = Collaborator.new
+    @user = User.all
+    @wiki = Wiki.new
+    @wiki = Wiki.find_by_id(params[:id])
+
+
 #@wiki.collaboration_user_ids = []
 #@wiki.save
  end
 
   def show
-    @wiki = Wiki.find(params[:id])
-    authorize Collaborator
+    @collaborator = Collaborator.find_by_id(params[:id])
+
+
   end
 
   def edit
@@ -35,6 +39,18 @@ class CollaboratorsController < ApplicationController
         render :edit
       end
     end
+
+
+        def create
+          @wiki = Wiki.find_by_id(params[:wiki_id])
+          @collaborator = Collaborator.new(user_id: params[:user_id], wiki_id: params[:wiki_id])
+       if @collaborator.save
+          flash[:notice] = "Congrats you have added a new collab"
+        else
+          flash[:error] = "Problem. Please try again"
+          render :new
+        end
+
 
     def destroy
   @collaborator.destroy!

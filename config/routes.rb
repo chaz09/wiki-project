@@ -7,11 +7,10 @@ devise_for :users
 resources :users
 resources :wikis
 
-resources :wikis do
-resources :collaborators, only: [:index, :new, :destroy, :update]
-end
-resources :charges, only: [:new, :create]
 
+resources :collaborators, only: [:index, :new, :destroy, :update]
+resources :charges, only: [:new, :create]
+resources :collaborators
 
 get '/users/sign_out' => 'devise/sessions#destroy'
 get "login", :to => "devise/sessions#new"
@@ -19,6 +18,7 @@ get "login", :to => "devise/sessions#new"
  get "settings", :to => "devise/registrations#edit"
  get "logout",   :to => "devise/sessions#destroy"
 
+get 'wikis/show'
 
 get 'about' => 'welcome#about'
 root "welcome#index"

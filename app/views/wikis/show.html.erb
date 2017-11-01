@@ -4,5 +4,3 @@ markdown.render("This is the wiki you chose. Happy reading!")
   <%= link_to "Edit", edit_wiki_path, class: 'btn btn-success' %>
 <%= link_to "Delete", @wiki, method: :delete, class: 'btn btn-danger', data: {confirm: 'Are you sure you want to delete this?'} %>
 <h2>Would you like to add a new collaboartor to this Wiki?</h1>
-<%= link_to "New Collaborators", new_collaborators_for_wiki_path, class: "small button" %>
-<%= link_to "Delete Collaborators", wiki_collaborators_path(@wiki), class: "btn btn-info" %>

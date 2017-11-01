@@ -2,6 +2,7 @@ class WikiPolicy < ApplicationPolicy
 
   def index
   @wikis = Wiki.all
+
   end
 
   def show?
