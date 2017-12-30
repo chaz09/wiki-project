@@ -5,3 +5,10 @@
 <% end %>
 <% end %>
 <%= link_to "New Wiki", new_wiki_path, class: 'btn btn-success' %>
+
+
+  <script type="text/javascript">
+       $(document).on("ready page:load", function () {
+          blocmetrics.report("The About Page");
+        })
+  </script>
